@@ -49,16 +49,35 @@ s3 = None
 bedrock = None
 
 try:
-    # Try to initialize AWS clients
-    if os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("AWS_PROFILE"):
+    # Check for AWS credentials
+    aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
+    aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+    
+    if aws_access_key and aws_secret_key:
+        # Use direct credentials (Railway/production)
+        print("🔑 Using AWS credentials from environment variables")
+        session = boto3.Session(
+            aws_access_key_id=aws_access_key,
+            aws_secret_access_key=aws_secret_key,
+            region_name=AWS_REGION
+        )
+    elif os.getenv("AWS_PROFILE"):
+        # Use profile (local development)
+        print(f"🔑 Using AWS profile: {AWS_PROFILE}")
         session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
+    else:
+        print("⚠️ No AWS credentials found - running in demo mode")
+        session = None
+    
+    if session:
         ddb = session.resource("dynamodb")
         s3 = session.client("s3") if PROC_BUCKET else None
         bedrock = session.client("bedrock-runtime") if BEDROCK_MODELID else None
         table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
-        print(f"✅ AWS initialized - Profile: {AWS_PROFILE}, Region: {AWS_REGION}, Table: {DDB_TABLE}")
-    else:
-        print("⚠️ AWS credentials not found - running in demo mode")
+        print(f"✅ AWS initialized - Region: {AWS_REGION}, Table: {DDB_TABLE}")
+        print(f"✅ S3 Bucket: {PROC_BUCKET}")
+        print(f"✅ Bedrock Model: {BEDROCK_MODELID}")
+    
 except Exception as e:
     print(f"⚠️ AWS initialization failed: {e} - running in demo mode")
     table = None
