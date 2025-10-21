@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import SearchSection from '../components/SearchSection';
@@ -27,12 +27,12 @@ const HomePage = () => {
   // Load initial articles
   useEffect(() => {
     loadArticles();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update stats when articles change
   useEffect(() => {
     calculateStats();
-  }, [articles]);
+  }, [articles]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadArticles = async (term = '', limit = 6) => {
     // Decide whether to use streaming based on term and expected results
@@ -119,6 +119,10 @@ const HomePage = () => {
           setLoading(false);
           setStreamStatus('');
           toast.error(update.message);
+          break;
+          
+        default:
+          console.log('Unknown stream update type:', update.type);
           break;
       }
     });

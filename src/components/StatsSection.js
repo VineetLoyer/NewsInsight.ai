@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, TrendingUp, Smile, Meh, Frown } from 'lucide-react';
+import { BarChart3, Smile, Meh, Frown } from 'lucide-react';
 
 const StatsSection = ({ stats, searchTerm }) => {
   const statItems = [
