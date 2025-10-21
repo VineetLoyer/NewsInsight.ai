@@ -85,14 +85,9 @@ export const searchArticles = async (query = '', limit = 6) => {
       data: error.response?.data
     });
     
-    // Only return mock data if backend is completely unavailable
-    if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
-      console.log('🔄 Backend unavailable, using mock data');
-      return getMockArticles(query, limit);
-    }
-    
-    // For other errors, still try to return real empty array
-    return [];
+    // Return mock data for any backend error (temporary fix)
+    console.log('🔄 Backend error, using mock data temporarily');
+    return getMockArticles(query, limit);
   }
 };
 

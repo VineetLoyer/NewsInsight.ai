@@ -11,5 +11,5 @@ botocore==1.34.0
 # HTTP requests
 requests==2.31.0
 
-# Optional: for development
+# Environment variables
 python-dotenv==1.0.0
