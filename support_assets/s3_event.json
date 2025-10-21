@@ -1,0 +1,14 @@
+{
+    "Records":  [
+                    {
+                        "s3":  {
+                                   "bucket":  {
+                                                  "name":  "newsinsights-raw-340752797090-us-west-2"
+                                              },
+                                   "object":  {
+                                                  "key":  "news-raw/20251019T002437Z/0a0ffc2594c99ee0.json"
+                                              }
+                               }
+                    }
+                ]
+}

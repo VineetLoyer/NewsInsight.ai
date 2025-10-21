@@ -1,0 +1,33 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect":"Allow",
+      "Action":["s3:GetObject","s3:ListBucket"],
+      "Resource":[
+        "arn:aws:s3:::__RAW__",
+        "arn:aws:s3:::__RAW__/*"
+      ]
+    },
+    {
+      "Effect":"Allow",
+      "Action":["s3:PutObject","s3:ListBucket"],
+      "Resource":[
+        "arn:aws:s3:::__PROC__",
+        "arn:aws:s3:::__PROC__/*"
+      ]
+    },
+    {
+      "Effect":"Allow",
+      "Action":["ssm:GetParameter"],
+      "Resource":[
+        "arn:aws:ssm:__REG__:__ACCT__:parameter/newsinsights/BEDROCK_MODEL_ID"
+      ]
+    },
+    {
+      "Effect":"Allow",
+      "Action":["bedrock:InvokeModel","bedrock:InvokeModelWithResponseStream"],
+      "Resource":"*"
+    }
+  ]
+}

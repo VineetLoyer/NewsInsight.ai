@@ -50,22 +50,29 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;700;800&family=Lora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:wght@400;500;600;700&display=swap');
 
 :root {
-  --headline-font: 'EB Garamond', 'Georgia', 'Times New Roman', serif;
-  --body-font: 'Lora', 'Georgia', 'Times New Roman', serif;
+  --headline-font: 'Playfair Display', 'EB Garamond', 'Georgia', 'Times New Roman', serif;
+  --body-font: 'Crimson Text', 'Georgia', 'Times New Roman', serif;
   --accent-color: #1a1a1a;
   --text-color: #2c3e50;
-  --border-color: #d9d9d9;
-  --positive-bg: #f1fdf3;
-  --positive-text: #0d5c0d;
-  --neutral-bg: #f9f9f9;
-  --neutral-text: #5a5a5a;
-  --negative-bg: #fef3f3;
-  --negative-text: #a41e1e;
+  --border-color: #e5e7eb;
+  --light-border: #f3f4f6;
+  --positive-bg: #ecfdf5;
+  --positive-text: #065f46;
+  --positive-border: #10b981;
+  --neutral-bg: #f8fafc;
+  --neutral-text: #64748b;
+  --neutral-border: #94a3b8;
+  --negative-bg: #fef2f2;
+  --negative-text: #dc2626;
+  --negative-border: #ef4444;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Global Typography */
 * {
   font-family: var(--body-font) !important;
   color: var(--text-color);
@@ -74,176 +81,359 @@ st.markdown("""
 h1, h2, h3, h4, .headline {
   font-family: var(--headline-font) !important;
   color: var(--accent-color) !important;
-  letter-spacing: 0.3px;
-  line-height: 1.3;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   font-weight: 700;
 }
 
 h1 {
-  font-size: 3.5rem;
-  margin-bottom: 0.2em;
-  border-bottom: 3px solid var(--accent-color);
-  padding-bottom: 0.2em;
+  font-size: 3.75rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  border-bottom: 4px double var(--accent-color);
+  padding-bottom: 0.5rem;
 }
 
 h2 {
-  font-size: 2rem;
-  margin-top: 1.2em;
+  font-size: 2.25rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 h3 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 body {
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 1.1rem;
 }
 
-.tag {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
+/* Header Styling */
+.main-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.main-title {
+  font-family: var(--headline-font) !important;
+  font-size: 4rem !important;
+  font-weight: 900 !important;
+  color: var(--accent-color) !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: -0.02em;
+}
+
+.main-subtitle {
+  font-size: 1.25rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Search Section */
+.search-section {
+  background: #fafafa;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--light-border);
+}
+
+.search-title {
+  font-family: var(--headline-font) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1rem !important;
+  color: var(--accent-color) !important;
+}
+
+/* Topic Suggestions */
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.topic-button {
+  background: white !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: 25px !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: var(--text-color) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.topic-button:hover {
+  border-color: var(--accent-color) !important;
+  background: var(--accent-color) !important;
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+/* News Cards */
+.news-card {
   border: 1px solid var(--border-color);
-  margin-right: 6px;
-  margin-bottom: 6px;
-  font-size: 0.85rem;
+  border-radius: 12px;
+  padding: 2rem;
   background: white;
-  color: var(--text-color);
-  font-weight: 500;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
+.news-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-headline {
+  font-family: var(--headline-font) !important;
+  font-size: 1.75rem !important;
+  line-height: 1.3 !important;
+  margin-bottom: 0.75rem !important;
+  color: var(--accent-color) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+}
+
+.card-meta {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--light-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-teaser {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  text-align: justify;
+}
+
+/* Sentiment Chips */
 .sentiment-chip {
-  display: inline-block;
-  padding: 4px 12px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  margin-left: 8px;
-  border: none;
+  margin-left: 0.5rem;
+  border: 2px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .sentiment-positive {
   background: var(--positive-bg);
   color: var(--positive-text);
+  border-color: var(--positive-border);
 }
 
 .sentiment-neutral {
   background: var(--neutral-bg);
   color: var(--neutral-text);
+  border-color: var(--neutral-border);
 }
 
 .sentiment-negative {
   background: var(--negative-bg);
   color: var(--negative-text);
+  border-color: var(--negative-border);
 }
 
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.75rem 1rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid !important;
+}
+
+.btn-original {
+  background: var(--accent-color) !important;
+  color: white !important;
+  border-color: var(--accent-color) !important;
+}
+
+.btn-original:hover {
+  background: #374151 !important;
+  border-color: #374151 !important;
+}
+
+.btn-explain {
+  background: #3b82f6 !important;
+  color: white !important;
+  border-color: #3b82f6 !important;
+}
+
+.btn-explain:hover {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+.btn-chat {
+  background: #10b981 !important;
+  color: white !important;
+  border-color: #10b981 !important;
+}
+
+.btn-chat:hover {
+  background: #059669 !important;
+  border-color: #059669 !important;
+}
+
+/* Tags/Entities */
+.tags-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--light-border);
+}
+
+.tags-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  font-size: 0.85rem;
+  background: white;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tag:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+/* Emotion Badges */
 .emotion-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 0.8rem;
-    margin: 2px 6px 0 0;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin: 0.125rem 0.25rem 0.125rem 0;
+  border: 1px solid;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .emotion-level-high {
-    background: #fee2e2;
-    color: #991b1b;
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
 }
 
 .emotion-level-medium {
-    background: #fde68a;
-    color: #92400e;
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
 }
 
 .emotion-level-low {
-    background: #dcfce7;
-    color: #166534;
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
 }
 
 .emotion-level-none {
-    background: #f8fafc;
-    color: #475569;
+  background: #f8fafc;
+  color: #475569;
+  border-color: #cbd5e1;
 }
 
-.news-card {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 24px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  margin-bottom: 20px;
-  transition: box-shadow 0.3s ease;
+/* Expanders */
+.stExpander {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  margin-top: 1rem !important;
 }
 
-.news-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .card-headline {
+    font-size: 1.5rem !important;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    min-width: auto;
+  }
 }
 
-.card-headline {
-  font-size: 1.6rem;
-  line-height: 1.4;
-  margin-bottom: 0.5em;
-  color: var(--accent-color);
-}
-
-.card-meta {
-  color: #6b7280;
-  font-size: 0.95rem;
-  margin-bottom: 1em;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 0.5em;
-}
-
-.card-teaser {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--text-color);
-  margin-bottom: 1.2em;
-  font-style: italic;
-}
-
-.card-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1.2em;
-}
-
-.card-entities {
-  margin-top: 1em;
-  padding-top: 1em;
-  border-top: 1px solid var(--border-color);
-}
-
-.small {
-  color: #6b7280;
-  font-size: 0.9rem;
-}
-
-.byline {
-  font-size: 0.95rem;
-  color: #6b7280;
-  font-style: italic;
-}
-
-button {
+/* Custom Streamlit Overrides */
+.stButton > button {
   font-family: var(--body-font) !important;
 }
 
+.stTextInput > div > div > input {
+  font-family: var(--body-font) !important;
+  font-size: 1.1rem !important;
+  padding: 0.75rem !important;
+  border-radius: 8px !important;
+}
+
+/* Links */
 a {
   color: var(--accent-color);
   text-decoration: none;
   border-bottom: 1px solid var(--accent-color);
-  transition: color 0.2s;
+  transition: all 0.2s ease;
 }
 
 a:hover {
-  color: #666;
-}
-
-.stExpander {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  color: #374151;
+  border-bottom-color: #374151;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -762,45 +952,98 @@ def bedrock_chat(context_text: str, user_msg: str, history: List[Dict[str, str]]
         return f"⚠️ Chat failed: {str(e)[:100]}"
 
 # ---------- UI ----------
-# Header with NYT-style serif
+# Header with classic newspaper styling
 st.markdown("""
-<div style="text-align: center; margin-bottom: 2rem;">
-  <h1>📰 NewsInsight</h1>
-  <p style="font-size: 1.1rem; color: #666; margin-top: -0.5rem;">
-    Verified News Insights & Deep Analysis
-  </p>
+<div class="main-header">
+  <div class="main-title">📰 NewsInsight</div>
+  <div class="main-subtitle">Verified News Insights & Deep Analysis</div>
+  <div style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.5rem;">
+    AI-Powered News Intelligence • Real-time Analysis • Sentiment & Emotion Tracking
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar: Search & Topic Suggestions
+# Initialize session state
 if "topic_input" not in st.session_state:
     st.session_state["topic_input"] = ""
 
-with st.sidebar:
-    st.header("🔍 Search")
-    
+# Main search section (moved to main area for better UX)
+st.markdown("""
+<div class="search-section">
+  <div class="search-title">🔍 Search News & Analysis</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Search input
+col1, col2 = st.columns([3, 1])
+with col1:
     st.text_input(
-        "Topic or keyword",
-        placeholder="e.g., AI regulation, inflation, Gaza ceasefire…",
-        help="Leave empty to see latest articles",
-        key="topic_input"
+        "",
+        placeholder="Search for topics like 'AI regulation', 'climate change', 'market trends'...",
+        help="Enter keywords to find relevant articles, or leave empty to see latest news",
+        key="topic_input",
+        label_visibility="collapsed"
+    )
+
+with col2:
+    search_clicked = st.button("🔍 Search", use_container_width=True, type="primary")
+
+# Suggested topics section
+st.markdown("### 📌 Trending Topics")
+st.markdown("Click on any topic below to explore related articles:")
+
+suggested_topics = [
+    "Politics", "Technology", "Business", "Markets", 
+    "Science", "World", "Climate", "AI", "Healthcare", 
+    "Economy", "Sports", "Entertainment"
+]
+
+# Create a more visually appealing topic grid
+cols = st.columns(4)
+for i, topic in enumerate(suggested_topics):
+    with cols[i % 4]:
+        if st.button(
+            topic,
+            key=f"topic-{topic}",
+            use_container_width=True,
+            on_click=_set_topic,
+            args=(topic,)
+        ):
+            pass
+
+st.divider()
+
+# Sidebar for additional controls
+with st.sidebar:
+    st.markdown("### ⚙️ Controls")
+    
+    # Article limit selector
+    article_limit = st.selectbox(
+        "Articles to show",
+        options=[3, 5, 10, 15],
+        index=0,
+        help="Number of articles to display"
+    )
+    
+    # Sentiment filter
+    sentiment_filter = st.selectbox(
+        "Filter by sentiment",
+        options=["All", "Positive", "Neutral", "Negative"],
+        index=0,
+        help="Filter articles by sentiment analysis"
     )
     
     st.divider()
     
-    st.subheader("📌 Suggested topics")
-    suggested_topics = ["Politics", "Technology", "Business", "Markets", "Science", "World"]
+    # Quick actions
+    st.markdown("### 🚀 Quick Actions")
+    if st.button("📰 Latest News", use_container_width=True):
+        st.session_state["topic_input"] = ""
+        st.rerun()
     
-    cols = st.columns(2)
-    for i, t in enumerate(suggested_topics):
-        with cols[i % 2]:
-            st.button(
-                t,
-                use_container_width=True,
-                key=f"btn-{t}",
-                on_click=_set_topic,
-                args=(t,)
-            )
+    if st.button("🔥 Trending Now", use_container_width=True):
+        st.session_state["topic_input"] = "trending"
+        st.rerun()
     
     st.divider()
     
@@ -810,9 +1053,16 @@ with st.sidebar:
 # Search and display results
 topic = st.session_state.get("topic_input", "")
 topic_suffix = f' for "{topic}"' if topic else ''
-st.markdown(f"### 🗞️ Top 3 Verified News Insights{topic_suffix}")
 
-results = search_articles_ddb(topic, limit=3)
+# Dynamic title based on search
+if topic:
+    st.markdown(f"## 🗞️ News Analysis{topic_suffix}")
+    st.markdown(f"*Found insights related to your search*")
+else:
+    st.markdown("## 🗞️ Latest Verified News Insights")
+    st.markdown("*Real-time analysis of breaking news and trending topics*")
+
+results = search_articles_ddb(topic, limit=article_limit)
 ingestion_notice: Optional[Tuple[str, str]] = None
 
 if topic and topic.strip() and not results:
@@ -853,24 +1103,83 @@ if ingestion_notice:
     else:
         st.info(message)
 
+# Show loading state
+if search_clicked or topic:
+    with st.spinner("🔍 Searching for relevant articles..."):
+        pass
+
 if not results:
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.info(
-            "📰 **No articles found yet.**\n\n"
-            "Try:\n"
-            "1. A different keyword\n"
-            "2. Running the news fetcher Lambda\n"
-            "3. Checking that articles are processed into DynamoDB"
-        )
-        
-        if DEBUG_MODE:
+    # Enhanced empty state
+    st.markdown("""
+    <div style="text-align: center; padding: 3rem 1rem; background: #f8fafc; border-radius: 12px; margin: 2rem 0;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">📰</div>
+        <h3 style="color: #374151; margin-bottom: 1rem;">No articles found</h3>
+        <p style="color: #6b7280; font-size: 1.1rem; margin-bottom: 2rem;">
+            We couldn't find any articles matching your search criteria.
+        </p>
+        <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+            <p style="font-weight: 600; margin-bottom: 1rem;">Try these suggestions:</p>
+            <ul style="text-align: left; color: #6b7280;">
+                <li>Use different or broader keywords</li>
+                <li>Check the trending topics above</li>
+                <li>Clear your search to see latest articles</li>
+                <li>Try searching for general topics like "technology" or "politics"</li>
+            </ul>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if DEBUG_MODE:
+        with st.expander("🔧 Debug Information"):
             st.write("**Troubleshooting:**")
             st.write("- Ensure DDB_TABLE is set and accessible")
             st.write("- Verify articles exist in the news_metadata table")
             st.write("- Check fetch_articles_lambda.py is running")
+            st.write(f"- Current search term: '{topic}'")
+            st.write(f"- Article limit: {article_limit}")
+            st.write(f"- Sentiment filter: {sentiment_filter}")
 else:
-    for idx, article in enumerate(results, 1):
+    # Apply sentiment filtering and count results
+    filtered_results = []
+    for article in results:
+        overall_sentiment = (
+            article.get("overall_sentiment") or 
+            article.get("sentiment") or 
+            "neutral"
+        )
+        
+        # Apply sentiment filter
+        if sentiment_filter != "All":
+            sentiment_bucket = _sentiment_bucket(overall_sentiment)
+            if sentiment_filter.lower() != sentiment_bucket:
+                continue
+        
+        filtered_results.append(article)
+    
+    # Show results summary with quick stats
+    if filtered_results:
+        filter_text = f" (filtered by {sentiment_filter} sentiment)" if sentiment_filter != "All" else ""
+        
+        # Calculate sentiment distribution
+        sentiment_counts = {"positive": 0, "neutral": 0, "negative": 0}
+        for article in filtered_results:
+            sentiment = _sentiment_bucket(article.get("overall_sentiment") or article.get("sentiment") or "neutral")
+            sentiment_counts[sentiment] += 1
+        
+        # Display stats
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("📊 Total Articles", len(filtered_results))
+        with col2:
+            st.metric("😊 Positive", sentiment_counts["positive"])
+        with col3:
+            st.metric("😐 Neutral", sentiment_counts["neutral"])
+        with col4:
+            st.metric("😟 Negative", sentiment_counts["negative"])
+        
+        st.markdown("---")
+    
+    for idx, article in enumerate(filtered_results, 1):
         doc_id = article.get("id", f"unknown-{idx}")
         headline = article.get("headline", "Untitled")
         date = article.get("date", "Unknown date")
@@ -901,69 +1210,120 @@ else:
         # Render card
         st.markdown('<div class="news-card">', unsafe_allow_html=True)
         
-        # Headline + sentiment
+        # Headline
         st.markdown(
             f'<div class="card-headline">{headline}</div>',
             unsafe_allow_html=True
         )
         
+        # Meta information with sentiment
+        formatted_date = date
+        if date and date != "Unknown date":
+            try:
+                dt = _to_dt(date)
+                if dt:
+                    formatted_date = dt.strftime("%B %d, %Y at %I:%M %p")
+            except:
+                pass
+        
         st.markdown(
-            f'<div class="card-meta">{date} · <strong>{source}</strong> {_sentiment_chip(overall_sentiment)}</div>',
+            f'<div class="card-meta">'
+            f'<span>📅 {formatted_date}</span> • '
+            f'<span><strong>📰 {source}</strong></span>'
+            f'{_sentiment_chip(overall_sentiment)}'
+            f'</div>',
             unsafe_allow_html=True
         )
         
-        # Teaser
+        # Teaser/Summary
         st.markdown(
-            f'<div class="card-teaser">{teaser}</div>',
+            f'<div class="card-teaser">"{teaser}"</div>',
             unsafe_allow_html=True
         )
         
-        # Action buttons
-        col1, col2, col3 = st.columns([0.2, 0.2, 0.6])
+        # Action buttons - enhanced design
+        st.markdown('<div class="action-buttons">', unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns(3)
         
         with col1:
             if url:
-                st.link_button("🔗 Original", url, use_container_width=True)
+                st.link_button(
+                    "🔗 Original Article", 
+                    url, 
+                    use_container_width=True,
+                    help="Read the full article from the original source"
+                )
             else:
                 st.button(
-                    "🔗 Original",
+                    "🔗 Original Article",
                     key=f"orig-disabled-{doc_id}",
                     disabled=True,
-                    use_container_width=True
+                    use_container_width=True,
+                    help="Original article link not available"
                 )
         
         with col2:
             explain_key = f"explain-{doc_id}"
-            if st.button("💡 Explain", key=explain_key, use_container_width=True):
-                with st.spinner("Generating analysis…"):
+            if st.button(
+                "💡 Explain in Detail", 
+                key=explain_key, 
+                use_container_width=True,
+                help="Get AI-powered detailed analysis and insights"
+            ):
+                with st.spinner("🤖 Generating detailed analysis..."):
                     analysis = bedrock_explain(doc.get("summary") or summary)
                     st.session_state[f"analysis-{doc_id}"] = analysis
+                    st.rerun()
         
-        # Entities/tags
         with col3:
-            if entities:
-                labels = []
-                for e in entities[:6]:
-                    label = e.get("text") if isinstance(e, dict) else e
-                    label = (label or "").strip()
-                    if label:
-                        labels.append(label)
+            chat_key = f"chat-toggle-{doc_id}"
+            if st.button(
+                "💬 Chat with Article", 
+                key=chat_key, 
+                use_container_width=True,
+                help="Ask questions about this article"
+            ):
+                # Toggle chat visibility
+                chat_state_key = f"show_chat_{doc_id}"
+                st.session_state[chat_state_key] = not st.session_state.get(chat_state_key, False)
+                st.rerun()
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Tags/Entities section - enhanced design
+        if entities:
+            labels = []
+            for e in entities[:8]:  # Show more tags
+                label = e.get("text") if isinstance(e, dict) else e
+                label = (label or "").strip()
+                if label and len(label) > 2:  # Filter out very short tags
+                    labels.append(label)
 
-                if labels:
-                    st.markdown('<div class="small">Related topics</div>', unsafe_allow_html=True)
-                    cols_tags = st.columns(min(3, len(labels)))
-                    for idx, label in enumerate(labels):
-                        target_col = cols_tags[idx % len(cols_tags)]
-                        with target_col:
-                            st.button(
-                                f"#{label}",
-                                key=f"entity-{doc_id}-{idx}",
-                                use_container_width=True,
-                                on_click=_set_topic,
-                                args=(label,)
-                            )
+            if labels:
+                st.markdown(
+                    '<div class="tags-section">'
+                    '<div class="tags-label">🏷️ Related Topics</div>',
+                    unsafe_allow_html=True
+                )
+                
+                # Create clickable tags
+                tag_cols = st.columns(min(4, len(labels)))
+                for idx, label in enumerate(labels):
+                    with tag_cols[idx % len(tag_cols)]:
+                        if st.button(
+                            f"#{label}",
+                            key=f"entity-{doc_id}-{idx}",
+                            use_container_width=True,
+                            on_click=_set_topic,
+                            args=(label,),
+                            help=f"Search for articles about {label}"
+                        ):
+                            pass
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
-        # Emotion cues
+        # Emotion analysis section
         emotion_badges = []
         if isinstance(emotions_map, dict):
             for emotion in NRC_EMOTIONS:
@@ -974,51 +1334,65 @@ else:
                 if level_norm not in EMOTION_LEVELS or level_norm == "none":
                     continue
                 emotion_badges.append(
-                    f'<span class="emotion-badge emotion-level-{level_norm}">{emotion.capitalize()} ({level_norm.title()})</span>'
+                    f'<span class="emotion-badge emotion-level-{level_norm}">{emotion} • {level_norm}</span>'
                 )
+        
         if emotion_badges:
             st.markdown(
-                '<div style="margin-top:0.75rem;">'
-                '<div class="small">Emotion cues</div>'
+                '<div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--light-border);">'
+                '<div class="tags-label">🎭 Emotional Tone Analysis</div>'
                 + " ".join(emotion_badges)
                 + "</div>",
                 unsafe_allow_html=True
             )
         
-        # Detailed analysis expander
+        # Detailed analysis section
         analysis = st.session_state.get(f"analysis-{doc_id}")
         if analysis:
-            with st.expander("📊 Detailed Analysis", expanded=False):
-                st.markdown(analysis)
+            st.markdown("---")
+            st.markdown("### 📊 Detailed Analysis")
+            st.markdown(analysis)
+            st.markdown("---")
         
-        # Chat expander
-        with st.expander("💬 Chat About This Article", expanded=False):
+        # Chat section - only show if toggled
+        chat_state_key = f"show_chat_{doc_id}"
+        if st.session_state.get(chat_state_key, False):
+            st.markdown("---")
+            st.markdown("### 💬 Chat About This Article")
+            
             chat_key = f"chat-{doc_id}"
             
             if chat_key not in st.session_state:
                 st.session_state[chat_key] = []
             
-            # Render chat history
-            for turn in st.session_state[chat_key]:
-                st.markdown(f"**You:** {turn['user']}")
-                st.markdown(f"**Claude:** {turn['assistant']}")
-                st.divider()
+            # Chat history
+            if st.session_state[chat_key]:
+                st.markdown("**Conversation History:**")
+                for i, turn in enumerate(st.session_state[chat_key]):
+                    with st.container():
+                        st.markdown(f"**🙋 You:** {turn['user']}")
+                        st.markdown(f"**🤖 AI:** {turn['assistant']}")
+                        if i < len(st.session_state[chat_key]) - 1:
+                            st.divider()
+                st.markdown("---")
             
             # Chat input
-            chat_cols = st.columns([0.85, 0.15])
+            st.markdown("**Ask a question about this article:**")
+            chat_cols = st.columns([4, 1])
             
             with chat_cols[0]:
                 user_msg = st.text_input(
-                    "Ask a question about this article:",
-                    key=f"in-{doc_id}",
-                    placeholder="What does this mean for...?"
+                    "",
+                    key=f"chat_input_{doc_id}",
+                    placeholder="e.g., What are the implications? Who is affected? What happens next?",
+                    label_visibility="collapsed"
                 )
             
             with chat_cols[1]:
-                send_btn = st.button("Send", key=f"send-{doc_id}", use_container_width=True)
+                send_btn = st.button("💬 Send", key=f"send-{doc_id}", use_container_width=True, type="primary")
             
             if send_btn and user_msg.strip():
-                with st.spinner("Thinking…"):
+                with st.spinner("🤖 AI is analyzing and responding..."):
                     answer = bedrock_chat(
                         doc.get("summary") or summary,
                         user_msg,
@@ -1028,7 +1402,26 @@ else:
                         "user": user_msg,
                         "assistant": answer
                     })
+                    # Clear the input
+                    st.session_state[f"chat_input_{doc_id}"] = ""
                     st.rerun()
+            
+            # Close chat button
+            if st.button("❌ Close Chat", key=f"close_chat_{doc_id}"):
+                st.session_state[chat_state_key] = False
+                st.rerun()
         
         st.markdown('</div>', unsafe_allow_html=True)
         st.markdown("")  # spacing
+
+# Footer section
+if results:
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align: center; padding: 2rem 0; color: #6b7280; font-style: italic;">
+        <p>📰 <strong>NewsInsight</strong> • Powered by AI • Real-time Analysis</p>
+        <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+            Sentiment analysis, emotion detection, and intelligent insights for informed decision-making
+        </p>
+    </div>
+    """, unsafe_allow_html=True)

@@ -1,0 +1,5 @@
+{
+  "id": {"S": "test-1"},
+  "source": {"S": "self"},
+  "summary": {"S": "hello"}
+}

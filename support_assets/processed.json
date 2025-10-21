@@ -1,0 +1,91 @@
+{
+  "id": "0a0ffc2594c99ee0",
+  "source": "guardian",
+  "headline": "Republicans mostly silent as millions of Americans protest Trump on No Kings day",
+  "date": "2025-10-18T22:34:07Z",
+  "summary": "\u2022 No Kings rallies and marches against Trump administration policies took place on Saturday as the third mass mobilization since Trump's return, featuring constitutional references and inflatable costumes rather than confrontational tactics\n\u2022 Trump administration engaged in counter-programming and mockery, with JD Vance and Pete Hegseth attending a Marine Corps event while the president downplayed the protests\n\u2022 Republican leaders remained mostly silent on Saturday despite earlier attempts to characterize the protests as 'hate America' events involving communists, Hamas sympathizers, and far-left extremists\n\u2022 Controversy emerged over live-fire military demonstration at Camp Pendleton that Governor Gavin Newsom said created public safety risks by closing a major interstate highway\n\u2022 Right-leaning media outlets claimed Soros-connected foundations funded the protests and that pro-Palestine organizers infiltrated the No Kings movement",
+  "sentiment": "negative",
+  "entities": [
+    {
+      "type": "person",
+      "text": "Donald Trump"
+    },
+    {
+      "type": "person",
+      "text": "JD Vance"
+    },
+    {
+      "type": "person",
+      "text": "Pete Hegseth"
+    },
+    {
+      "type": "person",
+      "text": "Gavin Newsom"
+    },
+    {
+      "type": "person",
+      "text": "Zohran Mamdani"
+    },
+    {
+      "type": "person",
+      "text": "Siraj Wahhaj"
+    },
+    {
+      "type": "person",
+      "text": "Chuck Schumer"
+    },
+    {
+      "type": "person",
+      "text": "Mike Johnson"
+    },
+    {
+      "type": "person",
+      "text": "George Soros"
+    },
+    {
+      "type": "event",
+      "text": "No Kings rallies"
+    },
+    {
+      "type": "event",
+      "text": "government shutdown"
+    },
+    {
+      "type": "location",
+      "text": "Mar-a-Lago"
+    },
+    {
+      "type": "location",
+      "text": "Camp Pendleton"
+    },
+    {
+      "type": "location",
+      "text": "California"
+    },
+    {
+      "type": "location",
+      "text": "New York"
+    },
+    {
+      "type": "organization",
+      "text": "Trump administration"
+    },
+    {
+      "type": "organization",
+      "text": "Fox News"
+    },
+    {
+      "type": "organization",
+      "text": "Indivisible"
+    },
+    {
+      "type": "organization",
+      "text": "Open Society Foundations"
+    },
+    {
+      "type": "organization",
+      "text": "US Marine Corps"
+    }
+  ],
+  "ingested_at": "2025-10-19T18:20:52.175291+00:00"
+}
