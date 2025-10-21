@@ -59,13 +59,13 @@ api.interceptors.response.use(
 );
 
 // API functions
-export const searchArticles = async (query = "", limit = 6) => {
+export const searchArticles = async (query = "", limit = 6, maxAgeDays = 2) => {
   try {
     console.log(`🔍 Searching for articles: "${query}" (limit: ${limit})`);
     console.log(`🔗 API URL: ${api.defaults.baseURL}/api/articles/search`);
 
     const response = await api.get("/api/articles/search", {
-      params: { query, limit },
+      params: { query, limit, max_age_days: maxAgeDays },
     });
 
     console.log(`✅ Backend response:`, response.data);

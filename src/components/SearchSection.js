@@ -12,7 +12,9 @@ const SearchSection = ({
   onArticleLimitChange,
   useStreaming,
   onStreamingToggle,
-  streamStatus
+  streamStatus,
+  ageFilter = 2,
+  onAgeFilterChange
 }) => {
   const [inputValue, setInputValue] = useState(searchTerm);
 
@@ -24,6 +26,12 @@ const SearchSection = ({
 
   const sentimentOptions = ['All', 'Positive', 'Neutral', 'Negative'];
   const limitOptions = [3, 6, 9, 12, 15];
+  const ageOptions = [
+    { value: 1, label: 'Last 24 hours' },
+    { value: 2, label: 'Last 2 days' },
+    { value: 7, label: 'This week' },
+    { value: 30, label: 'This month' }
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -100,6 +108,20 @@ const SearchSection = ({
             >
               {limitOptions.map(limit => (
                 <option key={limit} value={limit}>{limit} articles</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Age Filter */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-700">📅 Age:</span>
+            <select
+              value={ageFilter}
+              onChange={(e) => onAgeFilterChange && onAgeFilterChange(Number(e.target.value))}
+              className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            >
+              {ageOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>

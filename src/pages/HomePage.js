@@ -25,6 +25,7 @@ const HomePage = () => {
     negative: 0
   });
   const [railwayStatus, setRailwayStatus] = useState('testing');
+  const [ageFilter, setAgeFilter] = useState(2); // Default: 2 days
 
   // Test Railway connection on load
   useEffect(() => {
@@ -69,7 +70,7 @@ const HomePage = () => {
     setStreamStatus('');
     try {
       console.log(`🔄 Loading articles for: "${term}"`);
-      const data = await searchArticles(term, limit);
+      const data = await searchArticles(term, limit, ageFilter);
       setArticles(data);
       
       if (term && data.length === 0) {
@@ -264,6 +265,8 @@ const HomePage = () => {
             useStreaming={useStreaming}
             onStreamingToggle={setUseStreaming}
             streamStatus={streamStatus}
+            ageFilter={ageFilter}
+            onAgeFilterChange={setAgeFilter}
           />
         </motion.div>
 

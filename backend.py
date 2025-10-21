@@ -21,12 +21,19 @@ import asyncio
 import boto3
 import requests
 
+# Import content filtering
+try:
+    from content_filter import ContentFilter
+except ImportError:
+    ContentFilter = None
+    print("⚠️ Content filtering not available - install content_filter.py")
+
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
 # ---------- Config (copied from app.py) ----------
-AWS_PROFILE     = os.getenv("AWS_PROFILE", "default")
+# AWS_PROFILE not needed for Railway (uses direct credentials)
 AWS_REGION      = os.getenv("AWS_REGION", "us-west-2")
 DDB_TABLE       = os.getenv("DDB_TABLE", "news_metadata")
 PROC_BUCKET     = os.getenv("PROC_BUCKET", "")
@@ -41,18 +48,46 @@ RAW_PREFIX       = os.getenv("RAW_PREFIX", "news-raw/")
 
 # AWS clients
 try:
-    session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
+    # Use direct credentials for Railway, profile for local
+    aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
+    aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+    
+    if aws_access_key and aws_secret_key:
+        # Railway/production - use direct credentials
+        session = boto3.Session(
+            aws_access_key_id=aws_access_key,
+            aws_secret_access_key=aws_secret_key,
+            region_name=AWS_REGION
+        )
+        print("🔑 Using AWS credentials from environment variables")
+    else:
+        # Local development - use default profile
+        session = boto3.Session(region_name=AWS_REGION)
+        print("🔑 Using default AWS profile")
     ddb     = session.resource("dynamodb")
     s3      = session.client("s3") if PROC_BUCKET else None
     bedrock = session.client("bedrock-runtime") if BEDROCK_MODELID else None
     table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
-    print(f"✅ AWS initialized - Profile: {AWS_PROFILE}, Region: {AWS_REGION}, Table: {DDB_TABLE}")
+    print(f"✅ AWS initialized - Region: {AWS_REGION}, Table: {DDB_TABLE}")
+    
+    # Initialize content filter
+    if ContentFilter:
+        try:
+            content_filter = ContentFilter(session)
+            print("✅ Content filtering system initialized")
+        except Exception as e:
+            print(f"⚠️ Content filter initialization failed: {e}")
+            content_filter = None
+    else:
+        content_filter = None
+        
 except Exception as e:
     print(f"⚠️ AWS initialization failed: {e}")
     if not DEBUG_MODE:
         table = None
         s3 = None
         bedrock = None
+        content_filter = None
 
 # ---------- Helper Functions (copied from app.py) ----------
 def _to_dt(s: str):
