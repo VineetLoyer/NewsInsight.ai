@@ -30,7 +30,6 @@ except ImportError:
     pass
 
 # ---------- Config ----------
-AWS_PROFILE     = os.getenv("AWS_PROFILE", "default")
 AWS_REGION      = os.getenv("AWS_REGION", "us-west-2")
 DDB_TABLE       = os.getenv("DDB_TABLE", "news_metadata")
 PROC_BUCKET     = os.getenv("PROC_BUCKET", "")
