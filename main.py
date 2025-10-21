@@ -56,30 +56,45 @@ try:
     if aws_access_key and aws_secret_key:
         # Use direct credentials (Railway/production)
         print("🔑 Using AWS credentials from environment variables")
+        print(f"🔑 Access Key: {aws_access_key[:8]}...")
+        print(f"🔑 Region: {AWS_REGION}")
+        
+        # Create session with explicit credentials (no profile needed)
         session = boto3.Session(
             aws_access_key_id=aws_access_key,
             aws_secret_access_key=aws_secret_key,
             region_name=AWS_REGION
         )
-    elif os.getenv("AWS_PROFILE"):
-        # Use profile (local development)
-        print(f"🔑 Using AWS profile: {AWS_PROFILE}")
-        session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
-    else:
-        print("⚠️ No AWS credentials found - running in demo mode")
-        session = None
-    
-    if session:
+        
+        # Initialize AWS services
         ddb = session.resource("dynamodb")
         s3 = session.client("s3") if PROC_BUCKET else None
         bedrock = session.client("bedrock-runtime") if BEDROCK_MODELID else None
-        table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
-        print(f"✅ AWS initialized - Region: {AWS_REGION}, Table: {DDB_TABLE}")
-        print(f"✅ S3 Bucket: {PROC_BUCKET}")
-        print(f"✅ Bedrock Model: {BEDROCK_MODELID}")
+        
+        # Test DynamoDB connection
+        if DDB_TABLE:
+            table = ddb.Table(DDB_TABLE)
+            # Test table access
+            table.load()
+            print(f"✅ DynamoDB table '{DDB_TABLE}' accessible")
+        else:
+            table = None
+            print("⚠️ DDB_TABLE not configured")
+            
+        print(f"✅ AWS services initialized successfully")
+        print(f"   - S3 Bucket: {PROC_BUCKET}")
+        print(f"   - Bedrock Model: {BEDROCK_MODELID}")
+        
+    else:
+        print("⚠️ AWS credentials not found - running in demo mode")
+        print(f"   AWS_ACCESS_KEY_ID: {'✅' if aws_access_key else '❌'}")
+        print(f"   AWS_SECRET_ACCESS_KEY: {'✅' if aws_secret_key else '❌'}")
+        session = None
     
 except Exception as e:
-    print(f"⚠️ AWS initialization failed: {e} - running in demo mode")
+    print(f"⚠️ AWS initialization failed: {e}")
+    print(f"   Error type: {type(e).__name__}")
+    print("   Running in demo mode")
     table = None
     s3 = None
     bedrock = None
