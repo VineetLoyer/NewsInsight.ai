@@ -58,9 +58,16 @@ def search():
 
 if __name__ == "__main__":
     import uvicorn
+    
+    # Debug Railway environment
+    railway_port = os.environ.get("PORT")
+    print(f"🔌 Railway PORT env var: {railway_port}")
+    print(f"🔌 All environment vars: {list(os.environ.keys())}")
+    
     port = int(os.environ.get("PORT", 8000))
     print(f"🚀 Starting on port {port}")
     print(f"🌍 Environment: {os.environ.get('RAILWAY_ENVIRONMENT', 'local')}")
+    print(f"🏗️ Railway Service: {os.environ.get('RAILWAY_SERVICE_NAME', 'unknown')}")
     
     uvicorn.run(
         app, 
