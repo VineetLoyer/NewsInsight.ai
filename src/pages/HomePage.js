@@ -8,6 +8,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 import { searchArticles, searchArticlesStream } from '../services/api';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const HomePage = () => {
   const [articles, setArticles] = useState([]);
@@ -23,11 +24,29 @@ const HomePage = () => {
     neutral: 0,
     negative: 0
   });
+  const [railwayStatus, setRailwayStatus] = useState('testing');
 
-  // Load initial articles
+  // Test Railway connection on load
   useEffect(() => {
+    testRailwayConnection();
     loadArticles();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const testRailwayConnection = async () => {
+    try {
+      console.log('🧪 Testing Railway connection...');
+      const railwayUrl = 'https://newsinsightai-production.up.railway.app';
+      
+      const response = await axios.get(railwayUrl, { timeout: 10000 });
+      console.log('✅ Railway connection successful!', response.data);
+      setRailwayStatus('connected');
+      toast.success('✅ Railway Backend Connected!');
+    } catch (error) {
+      console.error('❌ Railway connection failed:', error);
+      setRailwayStatus('failed');
+      toast.error('❌ Railway Connection Failed');
+    }
+  };
 
   // Update stats when articles change
   useEffect(() => {
@@ -201,6 +220,32 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      
+      {/* Railway Connection Status */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+          <div className="flex items-center justify-center">
+            {railwayStatus === 'testing' && (
+              <div className="flex items-center text-yellow-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 mr-2"></div>
+                <span className="text-sm">Testing Railway connection...</span>
+              </div>
+            )}
+            {railwayStatus === 'connected' && (
+              <div className="flex items-center text-green-600">
+                <div className="h-4 w-4 bg-green-500 rounded-full mr-2"></div>
+                <span className="text-sm font-medium">✅ Railway Backend Connected</span>
+              </div>
+            )}
+            {railwayStatus === 'failed' && (
+              <div className="flex items-center text-red-600">
+                <div className="h-4 w-4 bg-red-500 rounded-full mr-2"></div>
+                <span className="text-sm font-medium">❌ Railway Connection Failed</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.div
