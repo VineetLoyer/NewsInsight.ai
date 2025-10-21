@@ -43,16 +43,24 @@ RAW_BUCKET      = os.getenv("RAW_BUCKET")
 PROCESSED_PREFIX = os.getenv("PROCESSED_PREFIX", "news-processed/")
 RAW_PREFIX       = os.getenv("RAW_PREFIX", "news-raw/")
 
-# AWS clients
+# AWS clients - handle missing credentials gracefully
+table = None
+s3 = None
+bedrock = None
+
 try:
-    session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
-    ddb     = session.resource("dynamodb")
-    s3      = session.client("s3") if PROC_BUCKET else None
-    bedrock = session.client("bedrock-runtime") if BEDROCK_MODELID else None
-    table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
-    print(f"✅ AWS initialized - Profile: {AWS_PROFILE}, Region: {AWS_REGION}, Table: {DDB_TABLE}")
+    # Try to initialize AWS clients
+    if os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("AWS_PROFILE"):
+        session = boto3.Session(profile_name=AWS_PROFILE, region_name=AWS_REGION)
+        ddb = session.resource("dynamodb")
+        s3 = session.client("s3") if PROC_BUCKET else None
+        bedrock = session.client("bedrock-runtime") if BEDROCK_MODELID else None
+        table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
+        print(f"✅ AWS initialized - Profile: {AWS_PROFILE}, Region: {AWS_REGION}, Table: {DDB_TABLE}")
+    else:
+        print("⚠️ AWS credentials not found - running in demo mode")
 except Exception as e:
-    print(f"⚠️ AWS initialization failed: {e}")
+    print(f"⚠️ AWS initialization failed: {e} - running in demo mode")
     table = None
     s3 = None
     bedrock = None
@@ -113,11 +121,46 @@ def _sentiment_bucket(overall: str) -> str:
     
     return "neutral"
 
+def get_demo_articles() -> List[Dict[str, Any]]:
+    """Return demo articles when AWS is not available"""
+    return [
+        {
+            "id": "demo-1",
+            "headline": "🚀 Railway Backend Connected Successfully!",
+            "summary": "The NewsInsight backend is now running on Railway with full AWS integration capabilities. Add your AWS credentials to enable real news data.",
+            "source": "NewsInsight",
+            "date": "2024-10-21T12:00:00Z",
+            "overall_sentiment": "positive",
+            "sentiment": "positive",
+            "entities": [{"text": "Railway", "type": "platform"}, {"text": "AWS", "type": "technology"}],
+            "emotions": {"joy": "high", "anticipation": "medium", "trust": "high"},
+            "url": "https://railway.app"
+        },
+        {
+            "id": "demo-2", 
+            "headline": "Add AWS Credentials to Enable Real News Data",
+            "summary": "To fetch real news articles, add your AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) and API keys (NEWSAPI_KEY, GUARDIAN_KEY) to Railway environment variables.",
+            "source": "Setup Guide",
+            "date": "2024-10-21T11:00:00Z",
+            "overall_sentiment": "neutral",
+            "sentiment": "neutral",
+            "entities": [{"text": "AWS", "type": "technology"}, {"text": "API Keys", "type": "configuration"}],
+            "emotions": {"anticipation": "medium", "trust": "medium"},
+            "url": "https://railway.app/project/settings"
+        }
+    ]
+
 def search_articles_ddb(topic: Optional[str] = None, limit: int = 6) -> List[Dict[str, Any]]:
     """Search articles in DynamoDB"""
     if not table:
-        print("⚠️ DynamoDB table not available")
-        return []
+        print("⚠️ DynamoDB table not available - returning demo articles")
+        demo_articles = get_demo_articles()
+        if topic:
+            # Simple filtering for demo
+            topic_lower = topic.lower()
+            filtered = [art for art in demo_articles if topic_lower in art['headline'].lower() or topic_lower in art['summary'].lower()]
+            return filtered[:limit] if filtered else demo_articles[:limit]
+        return demo_articles[:limit]
     
     try:
         items = []
