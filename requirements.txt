@@ -1,3 +1,15 @@
-boto3>=1.28.0
-streamlit>=1.28.0
-python-dateutil>=2.8.2
+# FastAPI Backend Requirements for Railway
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+
+# AWS SDK
+boto3==1.34.0
+botocore==1.34.0
+
+# HTTP requests
+requests==2.31.0
+
+# Optional: for development
+python-dotenv==1.0.0

@@ -1130,12 +1130,15 @@ if __name__ == "__main__":
     
     print(f"Starting NewsInsight API server on port {port}")
     print("Frontend should be available at: http://localhost:3000")
-    print("API docs available at: http://localhost:8000/docs")
+    print(f"API docs available at: http://localhost:{port}/docs")
+    
+    # Railway deployment configuration
+    is_railway = os.getenv("RAILWAY_ENVIRONMENT") is not None
     
     uvicorn.run(
         "backend:app",
         host="0.0.0.0",
         port=port,
-        reload=True,
+        reload=not is_railway,  # Disable reload in production
         log_level="info"
     )
