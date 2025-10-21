@@ -30,17 +30,15 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     print("🏠 Root endpoint called - Railway is reachable!")
-    return {
-        "message": "✅ Railway Backend Connected Successfully!", 
-        "status": "ok", 
-        "port": os.environ.get("PORT", "8000"),
-        "timestamp": time.time(),
-        "platform": "Railway",
-        "environment": os.environ.get('RAILWAY_ENVIRONMENT', 'local')
-    }
+    return {"status": "ok", "message": "Railway Backend Connected"}
+
+@app.get("/health")
+def health():
+    print("🏥 Health endpoint called")
+    return {"status": "healthy"}
 
 @app.get("/api/health")
-def health():
+def health_api():
     return {"status": "healthy"}
 
 @app.get("/api/articles/search")
