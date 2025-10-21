@@ -22,11 +22,14 @@ import boto3
 import requests
 
 # Import content filtering
+ContentFilter = None
 try:
     from content_filter import ContentFilter
-except ImportError:
-    ContentFilter = None
-    print("⚠️ Content filtering not available - install content_filter.py")
+    print("✅ Content filter module loaded")
+except ImportError as e:
+    print(f"⚠️ Content filtering not available: {e}")
+except Exception as e:
+    print(f"⚠️ Content filter import failed: {e}")
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -70,16 +73,17 @@ try:
     table = ddb.Table(DDB_TABLE) if DDB_TABLE else None
     print(f"✅ AWS initialized - Region: {AWS_REGION}, Table: {DDB_TABLE}")
     
-    # Initialize content filter
+    # Initialize content filter (optional)
+    content_filter = None
     if ContentFilter:
         try:
             content_filter = ContentFilter(session)
             print("✅ Content filtering system initialized")
         except Exception as e:
             print(f"⚠️ Content filter initialization failed: {e}")
-            content_filter = None
+            print("   Continuing without content filtering...")
     else:
-        content_filter = None
+        print("⚠️ Content filtering not available - continuing without it")
         
 except Exception as e:
     print(f"⚠️ AWS initialization failed: {e}")
@@ -799,6 +803,14 @@ def format_article(article: Dict[str, Any]) -> Dict[str, Any]:
 @app.get("/")
 async def root():
     return {"message": "NewsInsight API", "version": "1.0.0"}
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
+@app.get("/api/health")
+async def health_api():
+    return {"status": "healthy"}
 
 @app.get("/api/health")
 async def health_check():
