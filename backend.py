@@ -670,6 +670,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        # Local development
         "http://localhost:3000", 
         "http://127.0.0.1:3000",
         "http://localhost:3001", 
@@ -677,7 +678,11 @@ app.add_middleware(
         "http://localhost:3002", 
         "http://127.0.0.1:3002",
         "http://localhost:3003", 
-        "http://127.0.0.1:3003"
+        "http://127.0.0.1:3003",
+        # Production - Vercel domains
+        "https://news-insight-ai-tawny.vercel.app",  # Your main Vercel domain
+        "https://news-insight-ai-tawny-git-main.vercel.app",  # Git branch deployments
+        "https://*.vercel.app",  # Allow all Vercel preview deployments
     ],
     allow_credentials=True,
     allow_methods=["*"],

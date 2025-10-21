@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 // Create axios instance with base configuration
-const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const baseURL = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://newsinsightai-production.up.railway.app'
+    : 'http://localhost:8000');
+
 console.log('🔧 API Configuration:', {
   baseURL,
   env: process.env.REACT_APP_API_URL,
