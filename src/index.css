@@ -78,9 +78,9 @@
   }
   
   .topic-tag {
-    @apply inline-block px-3 py-1 bg-white border border-gray-300 rounded-full text-sm;
-    @apply text-gray-700 hover:bg-gray-900 hover:text-white hover:border-gray-900;
-    @apply transition-all duration-200 cursor-pointer transform hover:-translate-y-0.5;
+    @apply inline-block px-3 py-1 bg-parchment-100 dark:bg-charcoal-700 border border-parchment-400 dark:border-charcoal-500 rounded-full text-sm;
+    @apply text-charcoal-700 dark:text-tagRed-400 hover:bg-charcoal-800 dark:hover:bg-charcoal-600 hover:text-parchment-100 dark:hover:text-tagRed-300 hover:border-charcoal-800 dark:hover:border-charcoal-500;
+    @apply transition-all duration-200 cursor-pointer transform hover:-translate-y-0.5 font-medium;
   }
   
   .emotion-badge {
@@ -100,21 +100,22 @@
   }
   
   .btn-primary {
-    @apply bg-gray-900 text-white px-4 py-2 rounded-lg font-medium;
-    @apply hover:bg-gray-800 transition-colors duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply bg-charcoal-700 dark:bg-charcoal-600 text-parchment-100 px-4 py-2 rounded-lg font-medium;
+    @apply hover:bg-charcoal-600 dark:hover:bg-charcoal-500 transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-charcoal-500 focus:ring-offset-2;
   }
   
   .btn-secondary {
-    @apply bg-white text-gray-700 px-4 py-2 rounded-lg font-medium border border-gray-300;
-    @apply hover:bg-gray-50 hover:border-gray-400 transition-colors duration-200;
-    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply bg-parchment-100 dark:bg-charcoal-700 text-charcoal-700 dark:text-parchment-100 px-4 py-2 rounded-lg font-medium border border-parchment-400 dark:border-charcoal-500;
+    @apply hover:bg-parchment-50 dark:hover:bg-charcoal-600 hover:border-parchment-500 dark:hover:border-charcoal-400 transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-charcoal-500 focus:ring-offset-2;
   }
   
   .search-input {
-    @apply w-full px-4 py-3 text-lg border border-gray-300 rounded-xl;
-    @apply focus:ring-2 focus:ring-gray-500 focus:border-transparent;
-    @apply placeholder-gray-500 bg-white;
+    @apply w-full px-4 py-3 text-lg border border-parchment-400 dark:border-charcoal-500 rounded-xl;
+    @apply focus:ring-2 focus:ring-charcoal-500 focus:border-transparent;
+    @apply placeholder-charcoal-500 dark:placeholder-parchment-400 bg-parchment-50 dark:bg-charcoal-700 text-charcoal-800 dark:text-parchment-100;
+    @apply transition-colors duration-200;
   }
 }
 

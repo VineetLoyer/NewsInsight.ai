@@ -81,15 +81,15 @@ const SearchSection = ({
         </form>
 
         {/* Controls Row */}
-        <div className="flex flex-wrap gap-6 mb-8 p-4 bg-gray-50 rounded-xl">
+        <div className="flex flex-wrap gap-6 mb-8 p-4 bg-parchment-200 dark:bg-charcoal-700 rounded-xl">
           {/* Sentiment Filter */}
           <div className="flex items-center gap-3">
-            <Filter className="w-5 h-5 text-gray-600" />
-            <label className="text-sm font-medium text-gray-700">Sentiment:</label>
+            <Filter className="w-5 h-5 text-charcoal-600 dark:text-parchment-300" />
+            <label className="text-sm font-medium text-charcoal-700 dark:text-parchment-200">Sentiment:</label>
             <select
               value={sentimentFilter}
               onChange={(e) => onSentimentFilterChange(e.target.value)}
-              className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="px-3 py-1 border border-parchment-400 dark:border-charcoal-500 rounded-lg text-sm focus:ring-2 focus:ring-charcoal-500 focus:border-transparent bg-parchment-50 dark:bg-charcoal-600 text-charcoal-800 dark:text-parchment-100"
             >
               {sentimentOptions.map(option => (
                 <option key={option} value={option}>{option}</option>
@@ -99,12 +99,12 @@ const SearchSection = ({
 
           {/* Article Limit */}
           <div className="flex items-center gap-3">
-            <BarChart3 className="w-5 h-5 text-gray-600" />
-            <label className="text-sm font-medium text-gray-700">Show:</label>
+            <BarChart3 className="w-5 h-5 text-charcoal-600 dark:text-parchment-300" />
+            <label className="text-sm font-medium text-charcoal-700 dark:text-parchment-200">Show:</label>
             <select
               value={articleLimit}
               onChange={(e) => onArticleLimitChange(Number(e.target.value))}
-              className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="px-3 py-1 border border-parchment-400 dark:border-charcoal-500 rounded-lg text-sm focus:ring-2 focus:ring-charcoal-500 focus:border-transparent bg-parchment-50 dark:bg-charcoal-600 text-charcoal-800 dark:text-parchment-100"
             >
               {limitOptions.map(limit => (
                 <option key={limit} value={limit}>{limit} articles</option>
@@ -114,11 +114,11 @@ const SearchSection = ({
 
           {/* Age Filter */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">📅 Age:</span>
+            <span className="text-sm font-medium text-charcoal-700 dark:text-parchment-200">📅 Age:</span>
             <select
               value={ageFilter}
               onChange={(e) => onAgeFilterChange && onAgeFilterChange(Number(e.target.value))}
-              className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="px-3 py-1 border border-parchment-400 dark:border-charcoal-500 rounded-lg text-sm focus:ring-2 focus:ring-charcoal-500 focus:border-transparent bg-parchment-50 dark:bg-charcoal-600 text-charcoal-800 dark:text-parchment-100"
             >
               {ageOptions.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
@@ -128,13 +128,13 @@ const SearchSection = ({
 
           {/* Streaming Toggle */}
           <div className="flex items-center gap-3">
-            <label className="text-sm font-medium text-gray-700">Real-time mode:</label>
+            <label className="text-sm font-medium text-charcoal-700 dark:text-parchment-200">Real-time mode:</label>
             <button
               onClick={() => onStreamingToggle(!useStreaming)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors border ${
                 useStreaming 
-                  ? 'bg-blue-100 text-blue-800 border border-blue-200' 
-                  : 'bg-gray-100 text-gray-600 border border-gray-200'
+                  ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700' 
+                  : 'bg-parchment-100 dark:bg-charcoal-600 text-charcoal-600 dark:text-parchment-200 border-parchment-300 dark:border-charcoal-500'
               }`}
             >
               {useStreaming ? '🌊 Streaming' : '⚡ Fast'}
@@ -144,10 +144,10 @@ const SearchSection = ({
 
         {/* Stream Status */}
         {streamStatus && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-blue-800 text-sm font-medium">{streamStatus}</span>
+              <div className="w-4 h-4 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-blue-800 dark:text-blue-200 text-sm font-medium">{streamStatus}</span>
             </div>
           </div>
         )}
@@ -155,12 +155,12 @@ const SearchSection = ({
         {/* Trending Topics */}
         <div>
           <div className="flex items-center mb-4">
-            <TrendingUp className="w-5 h-5 text-gray-600 mr-2" />
-            <h3 className="text-lg font-headline font-semibold text-gray-900">
+            <TrendingUp className="w-5 h-5 text-charcoal-600 dark:text-parchment-300 mr-2" />
+            <h3 className="text-lg font-headline font-semibold text-charcoal-800 dark:text-parchment-100">
               Trending Topics
             </h3>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-charcoal-600 dark:text-parchment-300 mb-4">
             Click on any topic below to explore related articles:
           </p>
           

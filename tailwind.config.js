@@ -63,6 +63,13 @@ module.exports = {
           800: '#27272a',
           900: '#18181b',
         },
+        // Custom red shades for tags
+        tagRed: {
+          300: '#FCA5A5',  // Light red
+          400: '#F87171',  // Medium red  
+          500: '#EF4444',  // Standard red
+          600: '#DC2626',  // Dark red
+        },
         sentiment: {
           positive: '#16A34A',    // Green
           neutral: '#6B7280',     // Gray
