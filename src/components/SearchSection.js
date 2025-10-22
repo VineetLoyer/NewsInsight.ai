@@ -44,7 +44,7 @@ const SearchSection = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
+    <div className="bg-parchment-100 dark:bg-charcoal-800 rounded-2xl shadow-lg border border-parchment-400 dark:border-charcoal-600 p-8 mb-8 transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,8 +52,8 @@ const SearchSection = ({
       >
         {/* Search Header */}
         <div className="flex items-center mb-6">
-          <Search className="w-6 h-6 text-gray-600 mr-3" />
-          <h2 className="text-2xl font-headline font-bold text-gray-900">
+          <Search className="w-6 h-6 text-charcoal-600 dark:text-parchment-300 mr-3" />
+          <h2 className="text-2xl font-headline font-bold text-charcoal-800 dark:text-parchment-100">
             Search News & Analysis
           </h2>
         </div>

@@ -4,6 +4,7 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html"
   ],
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {
       fontFamily: {
@@ -12,6 +13,32 @@ module.exports = {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
+        // Parchment theme colors
+        parchment: {
+          50: '#FEFCF7',   // Lightest parchment
+          100: '#FDF9F0',  // Very light parchment
+          200: '#F9F1E0',  // Light parchment
+          300: '#F5E8CE',  // Medium light parchment
+          400: '#F1E9D2',  // Main parchment background
+          500: '#E8D5B7',  // Medium parchment
+          600: '#D4C4A8',  // Darker parchment
+          700: '#B8A082',  // Dark parchment
+          800: '#8B7355',  // Very dark parchment
+          900: '#5D4E37',  // Darkest parchment
+        },
+        charcoal: {
+          50: '#F7F7F7',   // Very light charcoal
+          100: '#E3E3E3',  // Light charcoal
+          200: '#C8C8C8',  // Medium light charcoal
+          300: '#A4A4A4',  // Medium charcoal
+          400: '#717171',  // Medium dark charcoal
+          500: '#4A4A4A',  // Main charcoal
+          600: '#3A3A3A',  // Dark charcoal
+          700: '#2D2D2D',  // Very dark charcoal
+          800: '#1F1F1F',  // Darkest charcoal
+          900: '#0F0F0F',  // Almost black
+        },
+        // Keep existing colors for compatibility
         primary: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -37,17 +64,21 @@ module.exports = {
           900: '#18181b',
         },
         sentiment: {
-          positive: {
+          positive: '#16A34A',    // Green
+          neutral: '#6B7280',     // Gray
+          negative: '#DC2626',    // Red
+          // Keep old format for compatibility
+          positiveOld: {
             bg: '#ecfdf5',
             text: '#065f46',
             border: '#10b981',
           },
-          neutral: {
+          neutralOld: {
             bg: '#f8fafc',
             text: '#64748b',
             border: '#94a3b8',
           },
-          negative: {
+          negativeOld: {
             bg: '#fef2f2',
             text: '#dc2626',
             border: '#ef4444',

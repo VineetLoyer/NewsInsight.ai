@@ -219,28 +219,28 @@ const HomePage = () => {
   const filteredArticles = filterArticlesBySentiment(articles);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-parchment-200 dark:bg-charcoal-900 transition-colors duration-300">
       <Header />
       
       {/* Railway Connection Status */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-parchment-300 dark:bg-charcoal-800 border-b border-parchment-500 dark:border-charcoal-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <div className="flex items-center justify-center">
             {railwayStatus === 'testing' && (
-              <div className="flex items-center text-yellow-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 mr-2"></div>
+              <div className="flex items-center text-yellow-600 dark:text-yellow-400">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 dark:border-yellow-400 mr-2"></div>
                 <span className="text-sm">Testing Railway connection...</span>
               </div>
             )}
             {railwayStatus === 'connected' && (
-              <div className="flex items-center text-green-600">
-                <div className="h-4 w-4 bg-green-500 rounded-full mr-2"></div>
+              <div className="flex items-center text-green-600 dark:text-green-400">
+                <div className="h-4 w-4 bg-green-500 dark:bg-green-400 rounded-full mr-2"></div>
                 <span className="text-sm font-medium">✅ Railway Backend Connected</span>
               </div>
             )}
             {railwayStatus === 'failed' && (
-              <div className="flex items-center text-red-600">
-                <div className="h-4 w-4 bg-red-500 rounded-full mr-2"></div>
+              <div className="flex items-center text-red-600 dark:text-red-400">
+                <div className="h-4 w-4 bg-red-500 dark:bg-red-400 rounded-full mr-2"></div>
                 <span className="text-sm font-medium">❌ Railway Connection Failed</span>
               </div>
             )}
