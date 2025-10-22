@@ -249,7 +249,7 @@ def should_prefetch_topic(topic: str) -> bool:
     return any(popular in topic_lower for popular in _popular_topics)
 
 def search_articles_ddb(topic: Optional[str] = None, limit: int = 6, use_cache: bool = True) -> List[Dict[str, Any]]:
-    """Search articles in DynamoDB with smart caching"""
+    """Search articles in DynamoDB with smart entity-based search"""
     if not table:
         print("⚠️ DynamoDB table not available")
         return []
@@ -263,7 +263,7 @@ def search_articles_ddb(topic: Optional[str] = None, limit: int = 6, use_cache: 
             print(f"⚡ Cache hit for '{topic}' - returning {len(cached_result['articles'])} cached articles")
             return cached_result['articles']
         else:
-            print(f"🔄 Cache miss for '{topic}' - fetching from database")
+            print(f"🔄 Cache miss for '{topic}' - searching database")
     
     try:
         items = []
@@ -276,54 +276,65 @@ def search_articles_ddb(topic: Optional[str] = None, limit: int = 6, use_cache: 
         
         print(f"📊 Scanned {len(items)} items from DynamoDB")
         
-        # Filter by topic if provided
+        # Smart entity-based filtering
         if topic and topic.strip():
             t_lower = topic.lower().strip()
             
-            def match(item):
-                summary = (item.get("summary") or "").lower()
-                headline = (item.get("headline") or "").lower()
-                source = (item.get("source") or "").lower()
+            def calculate_relevance_score(item):
+                """Calculate relevance score for ranking"""
+                score = 0
                 
-                # Get entities if they exist
-                entities_text = ""
+                # Check entities (highest priority)
                 entities = item.get("entities", [])
                 if isinstance(entities, list):
                     for entity in entities:
+                        entity_text = ""
                         if isinstance(entity, dict):
-                            entities_text += " " + (entity.get("text") or "").lower()
+                            entity_text = (entity.get("text") or "").lower()
                         elif isinstance(entity, str):
-                            entities_text += " " + entity.lower()
+                            entity_text = entity.lower()
+                        
+                        if t_lower in entity_text or entity_text in t_lower:
+                            score += 10  # High score for entity match
+                        elif any(word in entity_text for word in t_lower.split()):
+                            score += 5   # Medium score for partial entity match
                 
-                # Combine all searchable text
-                combined = f"{summary} {headline} {source} {entities_text}"
+                # Check headline (medium priority)
+                headline = (item.get("headline") or "").lower()
+                if t_lower in headline:
+                    score += 8
+                elif any(word in headline for word in t_lower.split()):
+                    score += 3
                 
-                # Try exact match first
-                if t_lower in combined:
-                    return True
+                # Check summary (lower priority)
+                summary = (item.get("summary") or "").lower()
+                if t_lower in summary:
+                    score += 4
+                elif any(word in summary for word in t_lower.split()):
+                    score += 1
                 
-                # Try word-by-word matching for multi-word queries
-                topic_words = t_lower.split()
-                if len(topic_words) > 1:
-                    # Check if ANY word is present (more flexible)
-                    matches = sum(1 for word in topic_words if word in combined)
-                    # Require at least half the words to match
-                    return matches >= len(topic_words) / 2
-                
-                # For single words, try partial matching
-                return any(word in combined for word in [t_lower] + [t_lower[:-1], t_lower[:-2]] if len(word) > 3)
+                return score
             
-            filtered = [it for it in items if match(it)]
-            print(f"🔍 Found {len(filtered)} items matching '{topic}'")
+            # Calculate scores and filter
+            scored_items = []
+            for item in items:
+                score = calculate_relevance_score(item)
+                if score > 0:  # Only include items with some relevance
+                    scored_items.append((item, score))
+            
+            # Sort by relevance score (descending) then by date
+            scored_items.sort(key=lambda x: (x[1], _to_dt(x[0].get("date", "")) or datetime.min), reverse=True)
+            
+            filtered = [item for item, score in scored_items]
+            print(f"🎯 Found {len(filtered)} relevant items for '{topic}' (entity-based search)")
+            
+            # Show top matches for debugging
+            if filtered and len(filtered) > 0:
+                top_scores = [(item.get("headline", "")[:50], score) for item, score in scored_items[:3]]
+                print(f"   Top matches: {top_scores}")
         else:
             filtered = items
         
-        # Sort by date descending
-        def key_fn(it):
-            dt = _to_dt(it.get("date", ""))
-            return dt or datetime.min
-        
-        filtered.sort(key=key_fn, reverse=True)
         result = filtered[:limit]
         
         # Cache the result if we have a topic
@@ -963,31 +974,23 @@ async def search_articles(
         # Use existing search function with caching
         articles = search_articles_ddb(query, limit, use_cache=True)
         
-        # If we don't have enough articles and we have a query, try to ingest more
-        if len(articles) < limit and query and auto_ingest and (NEWSAPI_KEY or GUARDIAN_KEY):
-            articles_needed = limit - len(articles)
-            print(f"🔄 Found {len(articles)} articles for '{query}', need {articles_needed} more. Attempting to ingest...")
+        # Smart ingestion: only ingest if we have very few relevant articles
+        min_threshold = max(2, limit // 3)  # At least 2 articles, or 1/3 of requested limit
+        
+        if len(articles) < min_threshold and query and auto_ingest and (NEWSAPI_KEY or GUARDIAN_KEY):
+            print(f"🎯 Smart ingestion triggered: found {len(articles)} articles (threshold: {min_threshold}) for '{query}'")
             
-            # Try multiple ingestion attempts to get enough articles
-            max_attempts = 2  # Reduced from 3 to speed up
-            attempt = 1
+            # Single, focused ingestion attempt
+            processed, stored = ingest_topic(query)
             
-            while len(articles) < limit and attempt <= max_attempts:
-                print(f"📥 Ingestion attempt {attempt}/{max_attempts}")
-                processed, stored = ingest_topic(query)
-                
-                if stored > 0:
-                    # Clear any caching and search again after ingestion
-                    import time
-                    time.sleep(1)  # Reduced from 2 seconds
-                    articles = search_articles_ddb(query, limit, use_cache=False)  # Skip cache for fresh results
-                    print(f"✅ After ingestion attempt {attempt}: found {len(articles)} articles")
-                    
-                    if len(articles) >= limit:
-                        break
-                else:
-                    print(f"⚠️ No new articles stored in attempt {attempt}")
-                    break
+            if stored > 0:
+                # Search again after ingestion
+                import time
+                time.sleep(0.5)  # Minimal delay
+                articles = search_articles_ddb(query, limit, use_cache=False)
+                print(f"✅ After smart ingestion: found {len(articles)} articles")
+            else:
+                print(f"⚠️ No new articles stored for '{query}' - may already have sufficient coverage")
                 
                 attempt += 1
             
